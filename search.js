@@ -10,7 +10,7 @@ window.addEventListener("load", function(){
 })
 
 function getVideoResults(q){
-    return fetch(`https://youtube.googleapis.com/youtube/v3/search?part=snippet&q=${q}&key=AIzaSyAwCkcbfNKFKEIbu66M0kFqXLGf4T0jj7I`)
+    return fetch(`https://youtube.googleapis.com/youtube/v3/search?part=snippet&q=${q}&key=AIzaSyBRYJ22kk_nQjRNrYNrSxZhCKhcpVMUZwE`)
     .then(response => response.json())
     .then(response => response)
     .catch(error => console.log(error))
