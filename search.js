@@ -5,9 +5,53 @@ const types = {
 Object.freeze(types);
 
 window.addEventListener("load", function(){
+
+    handleLoad();
+
     const searchBtn = document.getElementById("submit");
     searchBtn.addEventListener("click", handleSearch);
 })
+
+function getTopVideoResults(){
+    return fetch(`https://youtube.googleapis.com/youtube/v3/videos?part=snippet&chart=mostPopular&regionCode=IN&key=AIzaSyBRYJ22kk_nQjRNrYNrSxZhCKhcpVMUZwE`)
+    .then(response => response.json())
+    .then(response => response)
+    .catch(error => console.log(error))
+}
+
+async function handleLoad(){
+    try{
+        const {items: responses} = await getTopVideoResults();
+        console.log(responses);
+        const allTopCards = [];
+
+        for (let videos of responses){
+            const topCard = createVideoCards(videos);
+
+            topCard.addEventListener("click", () => {
+                var win = window.open(`https://www.youtube.com/watch?v=${video.id.videoId}`, '_blank');
+                win.focus();
+            })
+
+            if (topCard){
+                allTopCards.push(topCard);
+            }
+        }
+
+        let resultsContainer = document.getElementById("search-results");
+        resultsContainer.innerHTML = null;
+        resultsContainer.style.padding = "2.5%";
+        
+        const trendingHead = document.createElement("p");
+        trendingHead.setAttribute("id", "trending-head");
+        trendingHead.textContent = "Trending in India";
+        
+        resultsContainer.append(trendingHead, ...allTopCards)
+    }
+    catch{
+
+    }
+}
 
 function getVideoResults(q){
     return fetch(`https://youtube.googleapis.com/youtube/v3/search?part=snippet&q=${q}&key=AIzaSyBRYJ22kk_nQjRNrYNrSxZhCKhcpVMUZwE`)
@@ -86,7 +130,7 @@ async function handleSearch(){
             }
         }
 
-        const resultsContainer = document.getElementById("search-results");
+        let resultsContainer = document.getElementById("search-results");
         resultsContainer.innerHTML = null;
         resultsContainer.style.padding = "2.5%";
         resultsContainer.append(...allCards)
